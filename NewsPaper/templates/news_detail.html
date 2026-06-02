@@ -1,0 +1,19 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+{{ news_item.title|censor }}
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ news_item.title|censor }}</h1>
+    <p class="text-muted"><small>Опубликовано: {{ news_item.created_at|date:"d.m.Y" }}</small></p>
+    <hr>
+    <div style="white-space: pre-line;">
+        {{ news_item.text|censor }}
+    </div>
+    <hr>
+    <p><a href="/news/">← Вернуться к списку новостей</a></p>
+</div>
+{% endblock content %}

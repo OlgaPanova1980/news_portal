@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Все новости
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Все новости (всего: {{ news|length }})</h1>
+    <hr>
+    {% if news %}
+        {% for post in news %}
+        <div class="mb-4">
+            <h3><a href="/news/{{ post.id }}">{{ post.title|censor }}</a></h3>
+            <p class="text-muted"><small>Опубликовано: {{ post.created_at|date:"d.m.Y" }}</small></p>
+            <p>{{ post.text|censor|truncatechars:20 }}</p>
+            <hr>
+        </div>
+        {% endfor %}
+    {% else %}
+        <h2>Новостей нет!</h2>
+    {% endif %}
+</div>
+{% endblock content %}
