@@ -1,0 +1,17 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Сохранение публикации
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Сохранить публикацию</h1>
+    <hr>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Сохранить" class="btn btn-success" />
+    </form>
+</div>
+{% endblock content %}
