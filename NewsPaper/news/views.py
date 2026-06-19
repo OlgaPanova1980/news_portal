@@ -1,9 +1,11 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .models import Post
+from .models import Post, Category
 from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 
 class NewsList(ListView):
     model = Post
@@ -88,7 +90,7 @@ class ArticleDelete(DeleteView):
     template_name = 'post_delete.html'
     success_url = reverse_lazy('product_list')
 
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 
@@ -99,3 +101,10 @@ def upgrade_me(request):
     if not request.user.groups.filter(name='authors').exists():
         authors_group.user_set.add(user)
     return redirect('/')
+
+@login_required
+def subscribe(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.user not in category.subscribers.all():
+        category.subscribers.add(request.user)
+    return redirect(request.META.get('HTTP_REFERER', '/'))

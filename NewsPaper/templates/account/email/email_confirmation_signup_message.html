@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добро пожаловать!</title>
+</head>
+<body>
+    {% load account %}
+    <h1>Спасибо за регистрацию на портале News Portal, {{ user.username }}!</h1>
+    <h3>Чтобы активировать ваш аккаунт, пожалуйста, перейдите <a href="{{ activate_url }}">по этой ссылке</a>.</h3>
+</body>
+</html>
