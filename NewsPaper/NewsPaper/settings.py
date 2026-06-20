@@ -141,9 +141,9 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'olgapanova1980@bk.ru'
 
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/accounts/login.html/'
 LOGIN_REDIRECT_URL = '/'
 
-ACCOUNT_FORMS = {'signup': 'news.forms.CommonSignupForm'}
+ACCOUNT_FORMS = {'signup.html': 'news.forms.CommonSignupForm'}
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
