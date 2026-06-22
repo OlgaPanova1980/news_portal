@@ -4,7 +4,8 @@ from .models import Post, Category
 from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 
 class NewsList(ListView):
@@ -52,7 +53,26 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.categoryType = 'NW'
+        post.save()
+        form.save_m2m()
+
+        subscribers = set()
+        for category in post.postCategory.all():
+            for user in category.subscribers.all():
+                if user.email:
+                    subscribers.add(user.email)
+
+        if subscribers:
+            from .tasks import send_notifications
+            send_notifications.delay(
+                post.preview(),
+                post.pk,
+                post.title,
+                list(subscribers)
+            )
+
         return super().form_valid(form)
+
 
 class NewsEdit(PermissionRequiredMixin, UpdateView):
     permission_required = ('news.change_post',)
@@ -90,9 +110,6 @@ class ArticleDelete(DeleteView):
     template_name = 'post_delete.html'
     success_url = reverse_lazy('product_list')
 
-from django.shortcuts import redirect, get_object_or_404
-from django.contrib.auth.models import Group
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def upgrade_me(request):
